@@ -1,4 +1,7 @@
-Grok AI MCP Server
+# Grok AI MCP Server
+
+[![smithery badge](https://smithery.ai/badge/@8bitsats/grok_mcp)](https://smithery.ai/server/@8bitsats/grok_mcp)
+
 Welcome to the Grok AI MCP Server, a Node.js-based server that integrates with the xAI Grok API to provide powerful AI-driven analysis tools for the Solana blockchain and beyond. This server leverages the Model Context Protocol (MCP) to expose a set of tools for analyzing transactions, addresses, images, and general queries using Grok's advanced capabilities, including vision.
 
 Overview
@@ -24,7 +27,15 @@ npm: Node package manager.
 xAI API Key: Obtain an API key from xAI to interact with the Grok API.
 Solana Knowledge: Basic understanding of Solana blockchain concepts is helpful but not required.
 Installation
-Clone the Repository
+### Installing via Smithery
+
+To install grok_mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@8bitsats/grok_mcp):
+
+```bash
+npx -y @smithery/cli install @8bitsats/grok_mcp --client claude
+```
+
+### Clone the Repository
 bash
 
 Collapse
