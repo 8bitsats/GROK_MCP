@@ -1,0 +1,20 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - xaiApiKey
+    properties:
+      xaiApiKey:
+        type: string
+        default: your-xai-api-key-here
+        description: xAI API key to access Grok API
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({ command: 'node', args: ['build/index.js'], env: { XAI_API_KEY: config.xaiApiKey } })
+  exampleConfig:
+    xaiApiKey: example-api-key-123
