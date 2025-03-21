@@ -13,9 +13,18 @@ import {
   McpError,
 } from '@modelcontextprotocol/sdk/types.js';
 
+import { DeepgramService } from './services/deepgram-service.js';
+import { LiveKitService } from './services/livekit-service.js';
+import { OpenAIService } from './services/openai-service.js';
+import { VoiceAssistant } from './voice-assistant.js';
+
 class GrokAIServer {
   private server: Server;
   private apiKey: string;
+  private deepgramService: DeepgramService;
+  private openAIService: OpenAIService;
+  private liveKitService: LiveKitService;
+  private voiceAssistant: VoiceAssistant;
 
   constructor() {
     this.apiKey = process.env.XAI_API_KEY || '';
@@ -34,6 +43,11 @@ class GrokAIServer {
         },
       }
     );
+
+    this.deepgramService = new DeepgramService();
+    this.openAIService = new OpenAIService();
+    this.liveKitService = new LiveKitService();
+    this.voiceAssistant = new VoiceAssistant(this.deepgramService, this.openAIService, this.liveKitService);
 
     this.setupToolHandlers();
     
@@ -308,17 +322,17 @@ class GrokAIServer {
   }) {
     try {
       const { address, screenshot } = args;
-      const content: any[] = [];
+      const userContent: any[] = [];
       
       // Add text content
-      content.push({
+      userContent.push({
         type: "text",
         text: `Analyze this Solana address: ${address}`
       });
 
       // Add screenshot if available
       if (screenshot) {
-        content.push({
+        userContent.push({
           type: "image_url",
           image_url: {
             url: `data:image/jpeg;base64,${screenshot}`,
@@ -551,6 +565,7 @@ class GrokAIServer {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     console.error('Grok AI MCP server running on stdio');
+    this.voiceAssistant.startListening();
   }
 }
 

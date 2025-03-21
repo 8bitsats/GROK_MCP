@@ -3,6 +3,10 @@ import axios from 'axios';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport, } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ErrorCode, ListToolsRequestSchema, McpError, } from '@modelcontextprotocol/sdk/types.js';
+import { DeepgramService } from './services/deepgram-service.js';
+import { LiveKitService } from './services/livekit-service.js';
+import { OpenAIService } from './services/openai-service.js';
+import { VoiceAssistant } from './voice-assistant.js';
 class GrokAIServer {
     constructor() {
         this.apiKey = process.env.XAI_API_KEY || '';
@@ -17,6 +21,10 @@ class GrokAIServer {
                 tools: {},
             },
         });
+        this.deepgramService = new DeepgramService();
+        this.openAIService = new OpenAIService();
+        this.liveKitService = new LiveKitService();
+        this.voiceAssistant = new VoiceAssistant(this.deepgramService, this.openAIService, this.liveKitService);
         this.setupToolHandlers();
         // Error handling
         this.server.onerror = (error) => console.error('[MCP Error]', error);
@@ -459,6 +467,7 @@ class GrokAIServer {
         const transport = new StdioServerTransport();
         await this.server.connect(transport);
         console.error('Grok AI MCP server running on stdio');
+        this.voiceAssistant.startListening();
     }
 }
 const server = new GrokAIServer();
